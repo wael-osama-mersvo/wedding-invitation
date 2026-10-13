@@ -38,6 +38,20 @@ function open() {
       <span v-for="n in 12" :key="n" :style="{ '--i': n }" />
     </div>
 
+    <!-- Burst confetti fires as the envelope opens and the card rises -->
+    <div v-if="opened && !preferReducedMotion" class="open-confetti" aria-hidden="true">
+      <i
+        v-for="n in 40"
+        :key="n"
+        :style="{
+          '--tx': `${Math.cos((n / 40) * Math.PI * 2) * (110 + (n % 7) * 18)}px`,
+          '--ty': `${Math.sin((n / 40) * Math.PI * 2) * (85 + (n % 5) * 16) - 30}px`,
+          '--rot': `${n * 42}deg`,
+          '--delay': `${0.35 + (n % 10) * 0.05}s`,
+        }"
+      />
+    </div>
+
     <button type="button" class="envelope-hit" :aria-label="openLabel" @click="open">
       <div class="envelope">
         <div class="env-layer env-back" />
