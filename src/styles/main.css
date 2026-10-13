@@ -211,8 +211,37 @@ body {
     opacity 0.7s ease 0.45s,
     z-index 0s linear 0.4s;
 }
-.card-line { margin: 0; font-size: 1.15rem; color: #3a3228; }
-.card-amp { margin: 0; font-size: 0.85rem; letter-spacing: 0.2em; color: #b8964e; }
+.card-line {
+  margin: 0;
+  font-size: clamp(1.35rem, 4.2vw, 1.75rem);
+  color: #2a2218;
+  font-family: 'Great Vibes', 'Cormorant Garamond', cursive;
+  font-weight: 400;
+  line-height: 1.25;
+  letter-spacing: 0.02em;
+}
+.card-amp {
+  margin: 0.05rem 0;
+  font-size: 1rem;
+  letter-spacing: 0.28em;
+  color: #b8964e;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+}
+/* Arabic names on the envelope paper — calligraphic Ruqaa */
+[dir='rtl'] .card-line {
+  font-family: 'Aref Ruqaa', 'Noto Naskh Arabic', serif;
+  font-size: clamp(1.45rem, 4.5vw, 1.9rem);
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1.45;
+}
+[dir='rtl'] .card-amp {
+  font-family: 'Aref Ruqaa', 'Noto Naskh Arabic', serif;
+  font-style: normal;
+  letter-spacing: 0.12em;
+  font-size: 1.15rem;
+}
 
 /* Solid front panel so the closed envelope has no gap */
 .env-front {
@@ -370,17 +399,18 @@ body {
 /* ===== Invitation card ===== */
 .invite-card {
   --accent: var(--gold);
+  --card-base: #e4dccf;
   position: relative;
   overflow: hidden;
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.55), transparent 30%),
-    var(--cream);
+    linear-gradient(180deg, rgba(255,255,255,0.28), transparent 34%),
+    var(--card-base);
   border: 1px solid color-mix(in srgb, var(--accent) 42%, transparent);
   border-radius: 28px;
   padding: clamp(1.7rem, 5vw, 3.1rem) clamp(1.2rem, 4vw, 2.5rem);
   box-shadow:
     0 30px 60px rgba(0,0,0,0.28),
-    inset 0 0 0 1px rgba(255,255,255,0.5);
+    inset 0 0 0 1px rgba(255,255,255,0.35);
   text-align: center;
   animation: cardEnter 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
@@ -403,7 +433,7 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 0;
-  opacity: 0.38;
+  opacity: 0.5;
 }
 .figure {
   width: 42%;
@@ -863,35 +893,40 @@ body {
 /* Design themes */
 .design-1 {
   --accent: var(--sage);
+  --card-base: #cfc7b6;
   background:
-    radial-gradient(circle at 12% 16%, rgba(127,146,115,0.2), transparent 30%),
-    radial-gradient(circle at 88% 84%, rgba(195,163,90,0.16), transparent 32%),
-    var(--cream);
+    radial-gradient(circle at 12% 16%, rgba(127,146,115,0.28), transparent 32%),
+    radial-gradient(circle at 88% 84%, rgba(160,130,70,0.18), transparent 34%),
+    linear-gradient(165deg, #d8d0bf 0%, #c8bfac 55%, #bfb59f 100%);
 }
 .design-2 {
   --accent: #8a8578;
-  background: #fcfbf8;
+  --card-base: #e8e4dc;
+  background: #e8e4dc;
   border-radius: 8px;
 }
 .design-3 {
   --accent: var(--gold);
+  --card-base: #ddd4bf;
   border: 5px solid var(--emerald);
   box-shadow: inset 0 0 0 1px var(--gold), 0 30px 60px rgba(0,0,0,0.28);
-  background: #f5efe1;
+  background: #ddd4bf;
 }
 .design-4 {
   --accent: var(--blush);
+  --card-base: #e2d4cf;
   background:
-    radial-gradient(circle at 18% 18%, rgba(239,208,211,0.55), transparent 34%),
-    radial-gradient(circle at 82% 78%, rgba(127,146,115,0.16), transparent 36%),
-    #faf3ef;
+    radial-gradient(circle at 18% 18%, rgba(212,160,166,0.35), transparent 34%),
+    radial-gradient(circle at 82% 78%, rgba(127,146,115,0.18), transparent 36%),
+    #e2d4cf;
   border-radius: 32px;
 }
 .design-5 {
   --accent: var(--brown);
+  --card-base: #d6c8b0;
   background:
-    radial-gradient(ellipse 75% 45% at 50% 0%, rgba(255,255,255,0.55), transparent 70%),
-    var(--sand);
+    radial-gradient(ellipse 75% 45% at 50% 0%, rgba(255,255,255,0.28), transparent 70%),
+    #d6c8b0;
   border-radius: 140px 140px 28px 28px;
 }
 
