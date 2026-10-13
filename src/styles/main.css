@@ -392,32 +392,36 @@ body {
 
 .couple-figures {
   position: absolute;
-  inset: 0;
+  left: 50%;
+  top: 50%;
   z-index: 0;
+  width: min(420px, 112%);
+  height: 150%;
+  transform: translate(-50%, -52%);
   pointer-events: none;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
-  padding: 0 2% 4%;
-  opacity: 0.32;
+  gap: 0;
+  opacity: 0.38;
 }
 .figure {
-  width: min(36%, 158px);
+  width: 42%;
   height: auto;
-  max-height: 58%;
-  filter: drop-shadow(0 8px 16px rgba(40, 30, 20, 0.12));
+  max-height: 100%;
+  filter: drop-shadow(0 6px 14px rgba(40, 30, 20, 0.1));
 }
 .figure-groom {
   animation: figureSway 5.5s ease-in-out infinite;
-  transform-origin: bottom center;
+  transform-origin: center bottom;
 }
 .figure-bride {
   animation: figureSway 5.5s ease-in-out infinite 0.6s;
-  transform-origin: bottom center;
+  transform-origin: center bottom;
 }
 @keyframes figureSway {
   0%, 100% { transform: translateY(0) rotate(-1deg); }
-  50% { transform: translateY(-6px) rotate(1.5deg); }
+  50% { transform: translateY(-5px) rotate(1.5deg); }
 }
 [dir='rtl'] .couple-figures {
   flex-direction: row-reverse;
@@ -597,6 +601,16 @@ body {
 .names {
   position: relative;
   isolation: isolate;
+  min-height: 7.5rem;
+  padding: 0.35rem 0.5rem;
+  z-index: 1;
+}
+.names .groom,
+.names .ampersand,
+.names .bride,
+.names .name-halo {
+  position: relative;
+  z-index: 1;
 }
 .name-halo {
   position: absolute;
@@ -608,7 +622,7 @@ body {
   border-radius: 50%;
   background: radial-gradient(circle, color-mix(in srgb, var(--accent) 30%, transparent), transparent 68%);
   filter: blur(10px);
-  z-index: -1;
+  z-index: 0;
   animation: haloBreath 3.4s ease-in-out infinite;
 }
 @keyframes haloBreath {

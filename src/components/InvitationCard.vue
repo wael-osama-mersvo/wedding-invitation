@@ -31,7 +31,6 @@ const dateLabel = computed(() => {
 
 <template>
   <article :class="designClass">
-    <CoupleFigures />
     <div class="shine" aria-hidden="true" />
     <div class="shine shine-delay" aria-hidden="true" />
     <div class="soft-bloom" aria-hidden="true" />
@@ -65,6 +64,7 @@ const dateLabel = computed(() => {
       <p class="heading anim d2">{{ t.heading }}</p>
 
       <div class="names anim d3">
+        <CoupleFigures />
         <div class="name-halo" aria-hidden="true" />
         <h1 class="groom name-rise">{{ couple.groom }}</h1>
         <p class="ampersand amp-pulse">{{ couple.and }}</p>
