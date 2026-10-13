@@ -32,7 +32,7 @@ body {
 
 [dir='rtl'] body,
 [dir='rtl'] {
-  font-family: 'Noto Naskh Arabic', 'Cormorant Garamond', serif;
+  font-family: 'Aref Ruqaa', 'Noto Naskh Arabic', 'Cormorant Garamond', serif;
 }
 
 .page {
@@ -666,6 +666,21 @@ body {
   line-height: 1.12;
   color: var(--ink);
   text-shadow: 0 2px 18px color-mix(in srgb, var(--accent) 28%, transparent);
+}
+/* Match envelope paper Arabic (Aref Ruqaa) on invite names */
+[dir='rtl'] .invite-card {
+  font-family: 'Aref Ruqaa', 'Noto Naskh Arabic', serif;
+}
+[dir='rtl'] .names h1 {
+  font-family: 'Aref Ruqaa', 'Noto Naskh Arabic', serif;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: 0;
+}
+[dir='rtl'] .ampersand {
+  font-family: 'Aref Ruqaa', 'Noto Naskh Arabic', serif;
+  letter-spacing: 0.12em;
+  text-transform: none;
 }
 .name-rise {
   animation: nameFloat 3.6s ease-in-out infinite, nameGlow 4.5s ease-in-out infinite;
