@@ -102,7 +102,7 @@ describe('calendar and countdown', () => {
   })
 
   it('maps url comes from config', () => {
-    expect(weddingConfig.mapsUrl).toContain('maps.google.com')
+    expect(weddingConfig.mapsUrl).toBe('https://maps.app.goo.gl/LooJcurhwYRrvgpt5')
   })
 
   it('uses Al-Rimasia venue wording', () => {

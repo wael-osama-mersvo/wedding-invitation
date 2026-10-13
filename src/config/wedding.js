@@ -19,7 +19,7 @@ export const weddingConfig = {
     en: 'Line 10, Orabi, Obour City',
     ar: 'خط ١٠، عرابي، مدينة العبور',
   },
-  mapsUrl: 'https://maps.google.com/?q=مدينة+العبور+عرابي+خط+10',
+  mapsUrl: 'https://maps.app.goo.gl/LooJcurhwYRrvgpt5',
   defaultDesignNumber: 1,
   wording: {
     en: {
