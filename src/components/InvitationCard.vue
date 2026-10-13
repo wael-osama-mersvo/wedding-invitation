@@ -31,10 +31,19 @@ const dateLabel = computed(() => {
 <template>
   <article :class="designClass">
     <div class="shine" aria-hidden="true" />
-    <div class="card-sparkles" aria-hidden="true">
-      <span v-for="n in 14" :key="n" :style="{ '--s': n }" />
-    </div>
+    <div class="shine shine-delay" aria-hidden="true" />
     <div class="soft-bloom" aria-hidden="true" />
+    <div class="soft-bloom bloom-2" aria-hidden="true" />
+
+    <div class="card-sparkles" aria-hidden="true">
+      <span v-for="n in 18" :key="`s-${n}`" :style="{ '--s': n }" />
+    </div>
+    <div class="confetti" aria-hidden="true">
+      <i v-for="n in 16" :key="`c-${n}`" :style="{ '--c': n }" />
+    </div>
+    <div class="orbit-ring" aria-hidden="true">
+      <span /><span /><span />
+    </div>
 
     <div class="card-frame" aria-hidden="true">
       <span class="corner tl" />
@@ -46,13 +55,14 @@ const dateLabel = computed(() => {
     <svg class="motif motif-top anim d1" viewBox="0 0 240 48" aria-hidden="true">
       <path class="motif-path" d="M20 34 C50 8 80 8 120 34 C160 8 190 8 220 34" fill="none" stroke="currentColor" stroke-width="1.5" />
       <path class="motif-leaf" d="M120 18 C112 28 112 34 120 40 C128 34 128 28 120 18" fill="currentColor" opacity="0.85" />
-      <circle cx="72" cy="24" r="2.2" fill="currentColor" />
-      <circle cx="168" cy="24" r="2.2" fill="currentColor" />
+      <circle class="motif-dot" cx="72" cy="24" r="2.2" fill="currentColor" />
+      <circle class="motif-dot delay" cx="168" cy="24" r="2.2" fill="currentColor" />
     </svg>
 
     <p class="heading anim d2">{{ t.heading }}</p>
 
     <div class="names anim d3">
+      <div class="name-halo" aria-hidden="true" />
       <h1 class="groom name-rise">{{ couple.groom }}</h1>
       <p class="ampersand amp-pulse">{{ couple.and }}</p>
       <h1 class="bride name-rise delay">{{ couple.bride }}</h1>
@@ -64,7 +74,9 @@ const dateLabel = computed(() => {
 
     <p v-if="greeting" class="greeting anim d5">{{ greeting }}</p>
     <p class="message anim d6">{{ t.message }}</p>
-    <p class="meta date-line anim d7">{{ dateLabel }}</p>
+    <p class="meta date-line anim d7">
+      <span class="date-chip">{{ dateLabel }}</span>
+    </p>
 
     <CountdownBlock
       class="anim d8"
@@ -81,7 +93,7 @@ const dateLabel = computed(() => {
     </div>
 
     <div class="btn-row anim d10">
-      <a class="btn btn-primary" :href="weddingConfig.mapsUrl" target="_blank" rel="noopener noreferrer">
+      <a class="btn btn-primary pulse-btn" :href="weddingConfig.mapsUrl" target="_blank" rel="noopener noreferrer">
         {{ t.directions }}
       </a>
       <a class="btn" :href="googleUrl" target="_blank" rel="noopener noreferrer">

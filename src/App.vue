@@ -52,6 +52,9 @@ function onOpened() {
       <span class="glow g1" />
       <span class="glow g2" />
       <span class="glow g3" />
+      <div class="dust">
+        <span v-for="n in 20" :key="n" :style="{ '--d': n }" />
+      </div>
     </div>
 
     <div class="shell">

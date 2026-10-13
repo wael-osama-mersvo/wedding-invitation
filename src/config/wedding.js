@@ -1,8 +1,8 @@
 /** Keep in sync with generator config/wedding.json */
 export const weddingConfig = {
   brideName: {
-    en: 'Asmaa Eleraky',
-    ar: 'أسماء العراقي',
+    en: 'Asmaa Fathy',
+    ar: 'أسماء فتحي',
   },
   groomName: {
     en: 'Wael Osama',
