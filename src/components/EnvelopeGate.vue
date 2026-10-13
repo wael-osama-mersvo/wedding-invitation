@@ -5,7 +5,7 @@ import { formatCoupleNames, weddingConfig } from '../config/wedding.js'
 const props = defineProps({
   openLabel: { type: String, required: true },
   tapHint: { type: String, default: '' },
-  language: { type: String, default: 'en' },
+  language: { type: String, default: 'ar' },
   preferReducedMotion: { type: Boolean, default: false },
 })
 
@@ -27,7 +27,7 @@ const rootClass = computed(() => [
 function open() {
   if (opened.value) return
   opened.value = true
-  const delay = props.preferReducedMotion ? 0 : 950
+  const delay = props.preferReducedMotion ? 0 : 2200
   window.setTimeout(() => emit('opened'), delay)
 }
 </script>
@@ -35,7 +35,7 @@ function open() {
 <template>
   <div :class="rootClass">
     <div class="float-petals" aria-hidden="true">
-      <span v-for="n in 10" :key="n" :style="{ '--i': n }" />
+      <span v-for="n in 12" :key="n" :style="{ '--i': n }" />
     </div>
 
     <button type="button" class="envelope-hit" :aria-label="openLabel" @click="open">
@@ -48,9 +48,7 @@ function open() {
           <p class="card-line">{{ couple.bride }}</p>
         </div>
 
-        <!-- Solid front body keeps the card hidden when closed -->
         <div class="env-layer env-front" />
-
         <div class="env-layer env-pocket" />
 
         <div class="env-layer env-flap">

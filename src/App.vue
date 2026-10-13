@@ -6,7 +6,7 @@ import EnvelopeGate from './components/EnvelopeGate.vue'
 import InvitationCard from './components/InvitationCard.vue'
 
 const guest = ref(null)
-const language = ref('en')
+const language = ref('ar')
 const designNumber = ref(weddingConfig.defaultDesignNumber || 1)
 const revealed = ref(false)
 const preferReducedMotion = ref(

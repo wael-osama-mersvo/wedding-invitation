@@ -33,7 +33,7 @@ describe('App invitation flow', () => {
     window.history.pushState({}, '', '/wedding-invitation/')
     const wrapper = mount(App)
     await flushPromises()
-    expect(wrapper.text()).toMatch(/Open|invitation|دعوة/i)
+    expect(wrapper.text()).toMatch(/افتح|دعوة|Open|invitation/i)
     await openEnvelope(wrapper)
     expect(wrapper.findComponent(InvitationCard).exists()).toBe(true)
   })
