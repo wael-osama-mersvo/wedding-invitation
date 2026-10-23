@@ -21,6 +21,12 @@ export const weddingConfig = {
   },
   mapsUrl: 'https://maps.app.goo.gl/LooJcurhwYRrvgpt5',
   defaultDesignNumber: 1,
+  // Ar-Rum 30:21, shown above the envelope. The translation shows in English mode.
+  verse: {
+    text: 'وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً',
+    source: { ar: 'سورة الروم · ٢١', en: 'Ar-Rum · 30:21' },
+    translation: 'And of His signs is that He created for you from yourselves mates that you may find tranquillity in them; and He placed between you affection and mercy.',
+  },
   wording: {
     en: {
       heading: 'Together with their families',
@@ -28,7 +34,9 @@ export const weddingConfig = {
       greetingPrefix: 'Dear',
       message: 'We joyfully invite you to celebrate our wedding day.',
       openEnvelope: 'Open your invitation',
-      tapToOpen: 'Tap the envelope to open',
+      openLetter: 'Open your invitation',
+      whenHeading: 'The date',
+      signOff: 'With love,',
       directions: 'Get directions',
       addGoogle: 'Add to Google Calendar',
       downloadIcs: 'Download calendar (.ics)',
@@ -45,7 +53,9 @@ export const weddingConfig = {
       greetingPrefix: 'نتشرف بحضور',
       message: 'يسعدنا دعوتكم لمشاركتنا فرحة زفافنا.',
       openEnvelope: 'افتح دعوتك',
-      tapToOpen: 'المس الظرف للفتح',
+      openLetter: 'افتح رسالتك',
+      whenHeading: 'الموعد',
+      signOff: 'بكل الحب،',
       directions: 'الاتجاهات',
       addGoogle: 'أضف إلى تقويم Google',
       downloadIcs: 'تحميل ملف التقويم',

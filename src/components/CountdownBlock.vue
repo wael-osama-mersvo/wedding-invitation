@@ -7,7 +7,13 @@ const props = defineProps({
   title: { type: String, default: '' },
   weddingDayMessage: { type: String, required: true },
   afterMessage: { type: String, required: true },
+  language: { type: String, default: 'en' },
 })
+
+const digits = computed(() => new Intl.NumberFormat(props.language === 'ar' ? 'ar-EG' : 'en-GB', {
+  minimumIntegerDigits: 2,
+  useGrouping: false,
+}))
 
 const state = ref(getCountdownState())
 let timer
@@ -36,7 +42,7 @@ const units = computed(() => [
     <p v-if="title && showGrid" class="countdown-title">{{ title }}</p>
     <div v-if="showGrid" class="countdown">
       <div v-for="unit in units" :key="unit.key" class="countdown-unit">
-        <strong :key="`${unit.key}-${unit.value}`">{{ String(unit.value).padStart(2, '0') }}</strong>
+        <strong :key="`${unit.key}-${unit.value}`">{{ digits.format(unit.value) }}</strong>
         <small>{{ unit.label }}</small>
       </div>
     </div>

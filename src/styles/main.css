@@ -1,21 +1,11 @@
+/* ===================================================================
+   Base
+   =================================================================== */
 :root {
-  --ivory: #f6f0e6;
-  --cream: #fffaf2;
-  --sage: #7f9273;
-  --sage-dark: #556746;
-  --gold: #c3a35a;
-  --gold-bright: #e0c07a;
   --ink: #2f2a24;
-  --muted: #6d655c;
-  --blush: #d4a0a6;
-  --blush-soft: #efd0d3;
-  --emerald: #1a4634;
-  --sand: #ebe0ce;
-  --brown: #6b523c;
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   color: var(--ink);
-  background: var(--ivory);
   font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
 }
 
@@ -35,12 +25,28 @@ body {
   font-family: 'Aref Ruqaa', 'Noto Naskh Arabic', 'Cormorant Garamond', serif;
 }
 
+/* Full-height figures: Cormorant's default old-style numerals make "11" sit small beside the month. */
+.invite-card,
+.envelope-stage {
+  font-variant-numeric: lining-nums;
+  font-feature-settings: 'lnum' 1;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ===================================================================
+   Page: warm dark ground, soft drifting glows, the WebGL stage on top
+   =================================================================== */
 .page {
   position: relative;
   min-height: 100dvh;
   padding: calc(16px + var(--safe-top)) 16px calc(28px + var(--safe-bottom));
   display: flex;
   justify-content: center;
+  align-items: center;
   background:
     radial-gradient(ellipse at 15% 10%, rgba(195, 163, 90, 0.22), transparent 42%),
     radial-gradient(ellipse at 85% 90%, rgba(127, 146, 115, 0.2), transparent 40%),
@@ -66,36 +72,34 @@ body {
   to { transform: translate3d(4%, -3%, 0) scale(1.08); }
 }
 
-.dust span {
-  position: absolute;
-  width: 3px;
-  height: 3px;
-  border-radius: 50%;
-  background: rgba(224, 192, 122, 0.75);
-  left: calc(4% + (var(--d) * 4.6%));
-  top: 110%;
-  animation: dustRise 14s linear infinite;
-  animation-delay: calc(var(--d) * -0.7s);
-  box-shadow: 0 0 8px rgba(224, 192, 122, 0.55);
+.stage {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.6s ease;
 }
-@keyframes dustRise {
-  0% { transform: translateY(0) scale(0.5); opacity: 0; }
-  15% { opacity: 0.8; }
-  100% { transform: translateY(-120vh) scale(1.2); opacity: 0; }
-}
+.stage.is-live { opacity: 1; }
 
 .shell {
   position: relative;
   z-index: 1;
-  width: min(740px, 100%);
+  width: min(1000px, 100%);
 }
 
 .toolbar {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 14px;
+  position: fixed;
+  top: calc(12px + var(--safe-top));
+  inset-inline-end: 12px;
+  z-index: 10;
 }
 
+/* ===================================================================
+   Buttons
+   =================================================================== */
 .btn {
   min-height: 46px;
   min-width: 46px;
@@ -113,7 +117,7 @@ body {
   justify-content: center;
   transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
 }
-.btn:hover { transform: translateY(-1px); box-shadow: 0 10px 24px rgba(0,0,0,0.15); }
+.btn:hover { transform: translateY(-1px); box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15); }
 .btn:active { transform: translateY(0); }
 .btn.ghost {
   background: rgba(255, 250, 242, 0.14);
@@ -121,723 +125,458 @@ body {
   border-color: rgba(224, 192, 122, 0.4);
   backdrop-filter: blur(8px);
 }
-.btn-primary {
-  background: linear-gradient(135deg, var(--gold), #a8863f);
-  color: #1f1a14;
-  border-color: transparent;
-  font-weight: 600;
-}
 
 .btn-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 18px;
   justify-content: center;
 }
 
-/* ===== Envelope ===== */
+/* ===================================================================
+   Gate: the verse, then the envelope (drawn by the WebGL stage over
+   the .envelope box, which stays the click target)
+   =================================================================== */
 .envelope-stage {
-  min-height: 72dvh;
-  display: grid;
-  place-items: center;
-  gap: 18px;
+  min-height: calc(100dvh - 44px - var(--safe-top) - var(--safe-bottom));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(12px, 2.5vh, 28px);
+  padding: clamp(16px, 4vh, 48px) 0;
   text-align: center;
-  perspective: 1400px;
 }
 
-.float-petals { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
-.float-petals span {
-  position: absolute;
-  width: 10px;
-  height: 14px;
-  border-radius: 60% 40% 60% 40%;
-  background: linear-gradient(135deg, rgba(212,160,166,0.7), rgba(195,163,90,0.5));
-  left: calc(8% + (var(--i) * 7%));
-  top: -20px;
-  animation: fall 11s linear infinite;
-  animation-delay: calc(var(--i) * -0.8s);
-  opacity: 0.55;
+.gate-verse {
+  margin: 0;
+  max-width: 36rem;
+  color: #f7efdf;
 }
-@keyframes fall {
-  0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
-  15% { opacity: 0.6; }
-  100% { transform: translateY(95vh) rotate(320deg); opacity: 0; }
+.gate-verse blockquote {
+  margin: 0;
+  font-family: 'Amiri Quran', 'Amiri', 'Noto Naskh Arabic', serif;
+  font-size: clamp(1.5rem, 1.1rem + 2.2vw, 2.3rem);
+  line-height: 2.15;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.45);
+}
+.gate-verse .w {
+  display: inline-block;
+  opacity: 0;
+  filter: blur(6px);
+  transform: translateY(10px);
+  animation: wordIn 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: calc(0.4s + var(--i) * 0.14s);
+}
+@keyframes wordIn {
+  to { opacity: 1; filter: blur(0); transform: none; }
+}
+.verse-mark {
+  color: #e0c07a;
+  font-size: 1.1em;
+  padding-inline: 0.15em;
+}
+/* On the gate the brackets open just before the first word arrives. */
+.gate-verse .verse-mark {
+  display: inline-block;
+  opacity: 0;
+  filter: blur(6px);
+  animation: wordIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards 0.1s;
+}
+.gate-verse figcaption {
+  margin-top: 0.35rem;
+  font-family: 'Aref Ruqaa', 'Cormorant Garamond', serif;
+  font-size: 1.05rem;
+  color: #e0c07a;
+  letter-spacing: 0.04em;
+  opacity: 0;
+  animation: fadeUp 1s ease forwards 2.6s;
+}
+.verse-translation {
+  margin: 0.7rem auto 0;
+  max-width: 30rem;
+  font-style: italic;
+  font-size: 1.05rem;
+  line-height: 1.55;
+  color: rgba(247, 239, 223, 0.85);
+  opacity: 0;
+  animation: fadeUp 1s ease forwards 2.9s;
 }
 
 .envelope-hit {
+  position: relative;
   border: 0;
   background: transparent;
   padding: 12px;
   cursor: pointer;
 }
-
 .envelope {
-  position: relative;
-  width: min(360px, 86vw);
-  height: 230px;
-  margin: 0 auto;
-  filter: drop-shadow(0 28px 40px rgba(0, 0, 0, 0.38));
-  transform-style: preserve-3d;
-  perspective: 900px;
+  width: min(500px, 88vw);
+  aspect-ratio: 1.5686;
 }
-
-.env-layer { position: absolute; inset: 0; }
-
-.env-back {
-  border-radius: 12px;
-  background: linear-gradient(160deg, #efe1c4, #d9c29a 55%, #cbb288);
-  z-index: 0;
-}
-
-.env-card {
-  left: 8%;
-  right: 8%;
-  top: 10%;
-  height: 72%;
-  border-radius: 8px;
-  background: linear-gradient(180deg, #fffdf9, #f3e8d4);
-  border: 1px solid rgba(180, 150, 90, 0.35);
+/* Only when WebGL is missing: a plain label in the envelope's place. */
+.envelope-fallback {
   display: grid;
-  place-content: center;
-  gap: 2px;
-  /* Behind flaps while closed; jumps in front when opening */
-  z-index: 1;
-  /* Fully tucked inside while closed — not peeking through the flaps */
-  transform: translateY(62px) scale(0.92);
-  opacity: 0;
-  transition:
-    transform 1.9s cubic-bezier(0.22, 1, 0.36, 1) 0.35s,
-    opacity 0.7s ease 0.45s,
-    z-index 0s linear 0.4s;
-}
-.card-line {
-  margin: 0;
-  font-size: clamp(1.35rem, 4.2vw, 1.75rem);
-  color: #2a2218;
-  font-family: 'Great Vibes', 'Cormorant Garamond', cursive;
-  font-weight: 400;
-  line-height: 1.25;
-  letter-spacing: 0.02em;
-}
-.card-amp {
-  margin: 0.05rem 0;
-  font-size: 1rem;
-  letter-spacing: 0.28em;
-  color: #b8964e;
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
-}
-/* Arabic names on the envelope paper — calligraphic Ruqaa */
-[dir='rtl'] .card-line {
-  font-family: 'Aref Ruqaa', 'Noto Naskh Arabic', serif;
-  font-size: clamp(1.45rem, 4.5vw, 1.9rem);
-  font-weight: 700;
-  letter-spacing: 0;
-  line-height: 1.45;
-}
-[dir='rtl'] .card-amp {
-  font-family: 'Aref Ruqaa', 'Noto Naskh Arabic', serif;
-  font-style: normal;
-  letter-spacing: 0.12em;
-  font-size: 1.15rem;
+  place-items: center;
+  height: 100%;
+  border: 1px solid rgba(224, 192, 122, 0.55);
+  border-radius: 6px;
+  color: #f7efdf;
+  font-size: 1.3rem;
 }
 
-/* Solid front panel so the closed envelope has no gap */
-.env-front {
-  z-index: 2;
-  border-radius: 12px;
-  background: linear-gradient(165deg, #f3e6c8 0%, #e2cb9b 55%, #d6bc8b 100%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
-}
-
-.env-pocket {
-  z-index: 3;
-  border-radius: 0 0 12px 12px;
-  background: linear-gradient(180deg, #efe0c0 0%, #dfc895 100%);
-  /* High V so it meets the top flap under the monogram */
-  clip-path: polygon(0 36%, 50% 78%, 100% 36%, 100% 100%, 0 100%);
-}
-
-.env-flap {
-  z-index: 4;
-  transform-origin: top center;
-  transform: rotateX(0deg);
-  transition: transform 1.7s cubic-bezier(0.22, 1, 0.36, 1);
-  /* Tip reaches the pocket peak — fully closed */
-  clip-path: polygon(0 0, 100% 0, 50% 78%);
-  filter: drop-shadow(0 8px 12px rgba(80, 60, 20, 0.2));
-  backface-visibility: hidden;
-}
-.flap-face {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, #f9efd8 0%, #ead4a8 62%, #dfc690 100%);
-  clip-path: polygon(0 0, 100% 0, 50% 78%);
-}
-
-.mono-badge {
+/* The tapping hand: its fingertip rests on the wax seal (57% down the envelope). */
+.tap-hint {
   position: absolute;
   left: 50%;
-  top: 64%;
-  z-index: 5;
-  transform: translate(-50%, -50%);
-  min-width: 72px;
-  height: 72px;
-  padding: 0 10px;
-  border-radius: 999px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  background: linear-gradient(145deg, #f7efdf, #e8d7b2);
-  border: 1.5px solid rgba(180, 145, 75, 0.65);
-  box-shadow:
-    0 10px 22px rgba(60, 40, 10, 0.22),
-    inset 0 1px 0 rgba(255,255,255,0.7);
-  color: #6b5530;
-  transition: opacity 0.8s ease 0.15s, transform 1s ease 0.1s;
-  animation: badgeGlow 3.2s ease-in-out infinite;
-}
-.mono-badge span { font-size: 1.05rem; font-weight: 600; }
-.mono-badge small { opacity: 0.7; font-size: 0.75rem; }
-@keyframes badgeGlow {
-  0%, 100% { box-shadow: 0 10px 22px rgba(60, 40, 10, 0.22), inset 0 1px 0 rgba(255,255,255,0.7); }
-  50% { box-shadow: 0 12px 28px rgba(180, 145, 75, 0.4), inset 0 1px 0 rgba(255,255,255,0.85); }
-}
-
-.envelope-stage:not(.is-open) .envelope {
-  animation: envelopeIdle 4.5s ease-in-out infinite;
-}
-@keyframes envelopeIdle {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
-}
-
-.is-open .env-flap {
-  transform: rotateX(-175deg);
-  z-index: 2;
-}
-.is-open .env-card {
-  z-index: 6;
-  transform: translateY(-86px) scale(1);
-  opacity: 1;
-  transition:
-    transform 1.9s cubic-bezier(0.22, 1, 0.36, 1) 0.35s,
-    opacity 0.7s ease 0.45s,
-    z-index 0s;
-}
-.is-open .env-front,
-.is-open .env-pocket {
-  z-index: 3;
-}
-.is-open .mono-badge {
-  opacity: 0;
-  transform: translate(-50%, -50%) scale(0.7);
-  pointer-events: none;
-  animation: none;
-}
-.envelope-stage.is-open .envelope {
-  animation: none;
-}
-
-.env-hint {
-  margin: 0;
-  color: rgba(247, 239, 223, 0.8);
-  letter-spacing: 0.08em;
-}
-.env-cta { margin-top: 2px; }
-
-/* Envelope open confetti burst */
-.open-confetti {
-  position: absolute;
-  left: 50%;
-  top: 42%;
+  top: 57%;
   width: 0;
   height: 0;
-  pointer-events: none;
-  z-index: 20;
-}
-.open-confetti i {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 8px;
-  height: 12px;
-  border-radius: 2px;
-  background: #c3a35a;
   opacity: 0;
-  animation: confettiBurst 1.9s cubic-bezier(0.15, 0.85, 0.35, 1) forwards;
-  animation-delay: var(--delay, 0.35s);
+  pointer-events: none;
+  animation: hintIn 0.8s ease forwards 2s;
 }
-.open-confetti i:nth-child(3n) { background: #d4a0a6; width: 7px; height: 7px; border-radius: 50%; }
-.open-confetti i:nth-child(4n) { background: #7f9273; }
-.open-confetti i:nth-child(5n) { background: #e0c07a; width: 6px; height: 10px; }
-.open-confetti i:nth-child(6n) { background: #fff6e8; }
-@keyframes confettiBurst {
-  0% {
-    opacity: 0;
-    transform: translate(0, 0) scale(0.35) rotate(0deg);
-  }
-  15% { opacity: 1; }
-  100% {
-    opacity: 0;
-    transform: translate(var(--tx), var(--ty)) scale(1) rotate(var(--rot));
-  }
+@keyframes hintIn {
+  to { opacity: 0.5; }
+}
+.tap-hand {
+  position: absolute;
+  left: -17.5px;
+  top: -1px;
+  width: 44px;
+  height: 56px;
+  overflow: visible;
+  transform-origin: 17.5px 1px;
+  transform: rotate(-22deg);
+  filter: drop-shadow(0 6px 8px rgba(40, 25, 10, 0.4));
+  animation: tapPress 1.6s ease-in-out infinite 2s;
+}
+.hand-fill {
+  fill: #fffaf0;
+  stroke: #8a6a28;
+  stroke-width: 1.8;
+  stroke-linejoin: round;
+}
+.hand-lines {
+  fill: none;
+  stroke: #8a6a28;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  opacity: 0.55;
+}
+.tap-ripple {
+  position: absolute;
+  left: -16px;
+  top: -16px;
+  width: 32px;
+  height: 32px;
+  border: 2px solid rgba(255, 236, 190, 0.9);
+  border-radius: 50%;
+  opacity: 0;
+  animation: tapRipple 1.6s ease-out infinite 2.3s;
+}
+.tap-ripple.r2 { animation-delay: 2.55s; }
+@keyframes tapPress {
+  0%, 100% { transform: rotate(-22deg) translate(4px, 10px); }
+  22% { transform: rotate(-22deg) translate(0, 0) scale(0.93); }
+  40% { transform: rotate(-22deg) translate(4px, 10px); }
+}
+@keyframes tapRipple {
+  0% { opacity: 0.9; transform: scale(0.3); }
+  100% { opacity: 0; transform: scale(2.4); }
 }
 
-.reduce-motion .env-flap,
-.reduce-motion .env-card,
-.reduce-motion .mono-badge,
-.reduce-motion .float-petals span,
-.reduce-motion .glow,
-.reduce-motion .open-confetti i {
-  animation: none !important;
-  transition: none !important;
+.is-open .tap-hint,
+.is-open .gate-verse {
+  opacity: 0 !important;
+  transition: opacity 0.5s ease;
+  animation: none;
 }
 
-/* ===== Invitation card ===== */
-.invite-card {
-  --accent: var(--gold);
-  --card-base: #e4dccf;
+/* ===================================================================
+   The invitation: a royal letter on the envelope's own paper
+   =================================================================== */
+.invite-card.letter {
+  --letter-ink: #2c2418;
+  --letter-soft: #5e4f3c;
+  --gold-ink: #8a6a28;
+  --wax: #8a1219;
   position: relative;
   overflow: hidden;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,0.28), transparent 34%),
-    var(--card-base);
-  border: 1px solid color-mix(in srgb, var(--accent) 42%, transparent);
-  border-radius: 28px;
-  padding: clamp(1.7rem, 5vw, 3.1rem) clamp(1.2rem, 4vw, 2.5rem);
-  box-shadow:
-    0 30px 60px rgba(0,0,0,0.28),
-    inset 0 0 0 1px rgba(255,255,255,0.35);
+  width: 100%;
+  border-radius: 4px;
+  padding: clamp(26px, 4.2vh, 44px) clamp(20px, 4vw, 56px) clamp(20px, 3.4vh, 34px);
   text-align: center;
-  animation: cardEnter 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+  color: var(--letter-ink);
+  background-color: #efe1c3;
+  background-image:
+    radial-gradient(110% 85% at 50% 38%, rgba(255, 251, 240, 0.6), rgba(255, 251, 240, 0) 62%),
+    radial-gradient(140% 125% at 50% 50%, rgba(0, 0, 0, 0) 56%, rgba(112, 76, 30, 0.3) 100%),
+    url('/textures/paper/color.jpg');
+  background-size: auto, auto, cover;
+  background-blend-mode: normal, multiply, multiply;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 252, 240, 0.35),
+    0 44px 80px -24px rgba(0, 0, 0, 0.7),
+    0 14px 26px rgba(0, 0, 0, 0.35);
+}
+[dir='rtl'] .invite-card { font-family: 'Aref Ruqaa', 'Noto Naskh Arabic', serif; }
+
+/* Paper tooth on top of the scan */
+.invite-card.letter::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.32;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.45  0 0 0 0 0.35  0 0 0 0 0.2  0 0 0 0.55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
 }
 
-.invite-content {
+.letter-frame {
+  position: absolute;
+  inset: 14px;
+  border: 1px solid rgba(150, 112, 44, 0.6);
+  pointer-events: none;
+}
+.letter-frame::after {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  border: 1px solid rgba(150, 112, 44, 0.35);
+}
+.filigree {
+  position: absolute;
+  width: 54px;
+  height: 54px;
+  fill: none;
+  stroke: #9a7731;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+}
+.filigree ellipse,
+.filigree circle { fill: #9a7731; stroke: none; }
+.filigree.tl { top: -4px; left: -4px; }
+.filigree.tr { top: -4px; right: -4px; transform: scaleX(-1); }
+.filigree.bl { bottom: -4px; left: -4px; transform: scaleY(-1); }
+.filigree.br { bottom: -4px; right: -4px; transform: scale(-1, -1); }
+
+.letter-body {
   position: relative;
   z-index: 2;
-}
-
-.couple-figures {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  z-index: 0;
-  width: min(420px, 112%);
-  height: 150%;
-  transform: translate(-50%, -52%);
-  pointer-events: none;
   display: flex;
+  flex-direction: column;
+  gap: clamp(8px, 1.6vh, 16px);
+}
+
+.letter-verse { margin: 0; }
+.letter-verse blockquote {
+  margin: 0 auto;
+  max-width: 44rem;
+  font-family: 'Amiri Quran', 'Amiri', 'Noto Naskh Arabic', serif;
+  font-size: clamp(1.05rem, 0.9rem + 0.7vw, 1.4rem);
+  line-height: 1.95;
+}
+.letter-verse .verse-mark { color: var(--gold-ink); }
+.letter-verse figcaption {
+  font-family: 'Aref Ruqaa', 'Cormorant Garamond', serif;
+  font-size: 0.9rem;
+  color: var(--gold-ink);
+}
+
+.letter-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1px 1fr;
   align-items: center;
-  justify-content: space-between;
-  gap: 0;
-  opacity: 0.5;
+  gap: clamp(16px, 3vw, 40px);
 }
-.figure {
-  width: 42%;
-  height: auto;
-  max-height: 100%;
-  filter: drop-shadow(0 6px 14px rgba(40, 30, 20, 0.1));
-}
-.figure-groom {
-  animation: figureSway 5.5s ease-in-out infinite;
-  transform-origin: center bottom;
-}
-.figure-bride {
-  animation: figureSway 5.5s ease-in-out infinite 0.6s;
-  transform-origin: center bottom;
-}
-@keyframes figureSway {
-  0%, 100% { transform: translateY(0) rotate(-1deg); }
-  50% { transform: translateY(-5px) rotate(1.5deg); }
-}
-[dir='rtl'] .couple-figures {
-  flex-direction: row-reverse;
-}
-@keyframes cardEnter {
-  from { opacity: 0; transform: translateY(28px) scale(0.96); filter: blur(4px); }
-  to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
-}
-
-.shine {
-  position: absolute;
-  inset: -40% -60%;
-  background: linear-gradient(115deg, transparent 35%, rgba(255,255,255,0.4) 50%, transparent 65%);
-  animation: sheen 6s ease-in-out infinite;
-  pointer-events: none;
-}
-.shine-delay { animation-delay: -3s; opacity: 0.55; }
-@keyframes sheen {
-  0% { transform: translateX(-40%) rotate(8deg); }
-  100% { transform: translateX(40%) rotate(8deg); }
-}
-
-.soft-bloom {
-  position: absolute;
-  inset: 18% 12%;
-  border-radius: 50%;
-  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 28%, transparent), transparent 70%);
-  filter: blur(18px);
-  pointer-events: none;
-  animation: bloomPulse 4.8s ease-in-out infinite;
-}
-.bloom-2 {
-  inset: 55% 20% auto;
-  height: 30%;
-  animation-delay: -2.2s;
-  background: radial-gradient(circle, rgba(212, 160, 166, 0.28), transparent 70%);
-}
-@keyframes bloomPulse {
-  0%, 100% { opacity: 0.35; transform: scale(0.92); }
-  50% { opacity: 0.85; transform: scale(1.12); }
-}
-
-.card-sparkles {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-.card-sparkles span {
-  position: absolute;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: color-mix(in srgb, var(--accent) 80%, white);
-  left: calc(4% + (var(--s) * 5.1%));
-  top: calc(6% + ((var(--s) * 37) % 80) * 1%);
-  opacity: 0;
-  animation: sparkle 3.8s ease-in-out infinite;
-  animation-delay: calc(var(--s) * -0.22s);
-  box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 65%, transparent);
-}
-@keyframes sparkle {
-  0%, 100% { opacity: 0; transform: scale(0.3) translateY(0); }
-  30% { opacity: 1; transform: scale(1.25) translateY(-12px); }
-  65% { opacity: 0.25; transform: scale(0.55) translateY(-22px); }
-}
-
-.confetti {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-.confetti i {
-  position: absolute;
-  top: -12%;
-  left: calc(5% + (var(--c) * 5.8%));
-  width: 7px;
-  height: 11px;
-  border-radius: 2px;
-  background: color-mix(in srgb, var(--accent) 70%, #d4a0a6);
-  opacity: 0;
-  animation: confettiFall 7.5s linear infinite;
-  animation-delay: calc(var(--c) * -0.45s);
-}
-.confetti i:nth-child(3n) { background: rgba(212, 160, 166, 0.85); width: 6px; height: 6px; border-radius: 50%; }
-.confetti i:nth-child(4n) { background: rgba(127, 146, 115, 0.8); transform: rotate(25deg); }
-@keyframes confettiFall {
-  0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-  12% { opacity: 0.9; }
-  100% { transform: translateY(120vh) rotate(420deg); opacity: 0; }
-}
-
-.orbit-ring {
-  position: absolute;
-  left: 50%;
-  top: 28%;
-  width: min(280px, 78%);
-  aspect-ratio: 1;
-  transform: translate(-50%, -40%);
-  pointer-events: none;
-  opacity: 0.45;
-}
-.orbit-ring span {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  border: 1px dashed color-mix(in srgb, var(--accent) 55%, transparent);
-  animation: orbitSpin 18s linear infinite;
-}
-.orbit-ring span:nth-child(2) {
-  inset: 10%;
-  animation-duration: 12s;
-  animation-direction: reverse;
-  opacity: 0.7;
-}
-.orbit-ring span:nth-child(3) {
-  inset: 22%;
-  animation-duration: 9s;
-  border-style: solid;
-  opacity: 0.35;
-}
-@keyframes orbitSpin {
-  to { transform: rotate(360deg); }
-}
-
-.card-frame { pointer-events: none; }
-.corner {
-  position: absolute;
-  width: 48px;
-  height: 48px;
-  border: 1.5px solid color-mix(in srgb, var(--accent) 75%, transparent);
-  opacity: 0;
-  animation: cornerIn 1s ease forwards 0.35s;
-}
-.corner.tl { top: 18px; left: 18px; border-right: 0; border-bottom: 0; border-radius: 10px 0 0 0; }
-.corner.tr { top: 18px; right: 18px; border-left: 0; border-bottom: 0; border-radius: 0 10px 0 0; }
-.corner.bl { bottom: 18px; left: 18px; border-right: 0; border-top: 0; border-radius: 0 0 0 10px; }
-.corner.br { bottom: 18px; right: 18px; border-left: 0; border-top: 0; border-radius: 0 0 10px 0; }
-@keyframes cornerIn {
-  from { opacity: 0; transform: scale(0.7); }
-  to { opacity: 0.85; transform: scale(1); }
-}
-
-.motif {
-  color: var(--accent);
-  width: min(240px, 70%);
-  margin: 0 auto 0.5rem;
-  display: block;
-  opacity: 0.85;
-}
-.motif-path {
-  stroke-dasharray: 220;
-  stroke-dashoffset: 220;
-  animation: drawMotif 1.6s ease forwards 0.4s;
-}
-.motif-leaf {
-  transform-origin: center;
-  animation: leafPulse 2.8s ease-in-out infinite 1.2s;
-}
-@keyframes drawMotif {
-  to { stroke-dashoffset: 0; }
-}
-@keyframes leafPulse {
-  0%, 100% { transform: scale(1); opacity: 0.85; }
-  50% { transform: scale(1.12); opacity: 1; }
+.letter-rule {
+  align-self: stretch;
+  background: linear-gradient(transparent, rgba(150, 112, 44, 0.55) 18%, rgba(150, 112, 44, 0.55) 82%, transparent);
 }
 
 .heading {
+  margin: 0 0 0.35rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   font-size: 0.82rem;
-  color: var(--accent);
-  margin: 0.25rem 0 0.85rem;
+  font-weight: 600;
+  color: var(--gold-ink);
 }
 
+/* Names, with the couple standing either side */
 .names {
+  --figure-w: clamp(54px, 16%, 88px);
   position: relative;
   isolation: isolate;
-  min-height: 7.5rem;
-  padding: 0.35rem 0.5rem;
-  z-index: 1;
-}
-.names .groom,
-.names .ampersand,
-.names .bride,
-.names .name-halo {
-  position: relative;
-  z-index: 1;
-}
-.name-halo {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: min(320px, 92%);
-  height: 140%;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 30%, transparent), transparent 68%);
-  filter: blur(10px);
-  z-index: 0;
-  animation: haloBreath 3.4s ease-in-out infinite;
-}
-@keyframes haloBreath {
-  0%, 100% { opacity: 0.45; transform: translate(-50%, -50%) scale(0.92); }
-  50% { opacity: 0.95; transform: translate(-50%, -50%) scale(1.08); }
+  min-height: calc(var(--figure-w) * 1.85);
+  padding: 0.35rem calc(var(--figure-w) + 0.25rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 .names h1 {
-  font-size: clamp(2.1rem, 6.4vw, 3.3rem);
-  font-weight: 600;
+  position: relative;
+  z-index: 1;
   margin: 0.12rem 0;
+  font-size: clamp(1.9rem, 1.2rem + 1.9vw, 2.75rem);
+  font-weight: 600;
   line-height: 1.12;
-  color: var(--ink);
-  text-shadow: 0 2px 18px color-mix(in srgb, var(--accent) 28%, transparent);
-}
-/* Match envelope paper Arabic (Aref Ruqaa) on invite names */
-[dir='rtl'] .invite-card {
-  font-family: 'Aref Ruqaa', 'Noto Naskh Arabic', serif;
+  white-space: nowrap;
 }
 [dir='rtl'] .names h1 {
   font-family: 'Aref Ruqaa', 'Noto Naskh Arabic', serif;
   font-weight: 700;
   line-height: 1.35;
-  letter-spacing: 0;
+}
+.ampersand {
+  position: relative;
+  z-index: 1;
+  margin: 0.2rem 0;
+  font-size: 1.05rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
 }
 [dir='rtl'] .ampersand {
   font-family: 'Aref Ruqaa', 'Noto Naskh Arabic', serif;
   letter-spacing: 0.12em;
   text-transform: none;
 }
-.name-rise {
-  animation: nameFloat 3.6s ease-in-out infinite, nameGlow 4.5s ease-in-out infinite;
-}
-.name-rise.delay { animation-delay: 0.45s, 0.9s; }
-@keyframes nameFloat {
-  0%, 100% { transform: translateY(0) scale(1); }
-  50% { transform: translateY(-5px) scale(1.02); }
-}
-@keyframes nameGlow {
-  0%, 100% { filter: brightness(1); }
-  50% { filter: brightness(1.08); }
-}
-.ampersand {
-  margin: 0.2rem 0;
-  font-size: 1.05rem;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--accent);
-}
-.amp-pulse {
-  animation: ampGlow 2.2s ease-in-out infinite;
-}
-@keyframes ampGlow {
-  0%, 100% { opacity: 0.7; letter-spacing: 0.22em; transform: scale(1); }
-  50% { opacity: 1; letter-spacing: 0.4em; transform: scale(1.08); }
-}
 
-.ornament {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  margin: 0.95rem 0 1.1rem;
-  color: var(--accent);
-}
-.ornament span {
-  width: 58px;
-  height: 1px;
-  background: currentColor;
-  opacity: 0.7;
-  transform-origin: center;
-  animation: lineGrow 1.2s ease both;
-}
-.ornament i {
-  width: 9px;
-  height: 9px;
-  border: 1.5px solid currentColor;
-  border-radius: 50%;
-  display: inline-block;
-  animation: diamondSpin 5s linear infinite;
-}
-@keyframes lineGrow {
-  from { transform: scaleX(0); opacity: 0; }
-  to { transform: scaleX(1); opacity: 0.7; }
-}
-@keyframes diamondSpin {
-  from { transform: rotate(0deg) scale(1); }
-  50% { transform: rotate(180deg) scale(1.15); }
-  to { transform: rotate(360deg) scale(1); }
-}
+.greeting { font-size: clamp(1.3rem, 1rem + 1vw, 1.7rem); margin: 0.2rem 0 0.25rem; }
+.message,
+.meta { color: var(--letter-soft); line-height: 1.6; }
+.message { font-size: 1.05rem; margin: 0; }
 
-.greeting {
-  font-size: clamp(1.4rem, 3.8vw, 1.95rem);
-  margin: 0.35rem 0 0.75rem;
-  background: linear-gradient(90deg, var(--ink), color-mix(in srgb, var(--accent) 70%, var(--ink)), var(--ink));
-  background-size: 200% auto;
+/* Gold pressed into the paper (letterpress) */
+.engraved {
+  background-image: linear-gradient(180deg, #5e4413 0%, #7f5f1f 30%, #a9873a 58%, #c4a253 74%, #9a7830 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  animation: greetingShimmer 5s linear infinite;
-}
-@keyframes greetingShimmer {
-  to { background-position: 200% center; }
-}
-.message, .meta {
-  color: var(--muted);
-  line-height: 1.7;
-  margin: 0.35rem 0;
-}
-.date-line {
-  font-size: 1.12rem;
-  color: var(--ink) !important;
-  margin-top: 0.95rem !important;
-}
-.date-chip {
-  display: inline-block;
-  padding: 0.45rem 1rem;
-  border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
-  background: color-mix(in srgb, var(--accent) 12%, white);
-  animation: chipPulse 2.8s ease-in-out infinite;
-}
-@keyframes chipPulse {
-  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 0%, transparent); }
-  50% { box-shadow: 0 0 0 8px color-mix(in srgb, var(--accent) 12%, transparent); }
-}
-.venue-block { margin-top: 1.15rem; }
-.venue-name { font-size: 1.2rem; color: var(--ink) !important; }
-.pulse-btn {
-  animation: ctaPulse 2.4s ease-in-out infinite;
-}
-@keyframes ctaPulse {
-  0%, 100% { box-shadow: 0 8px 18px rgba(0,0,0,0.12); transform: translateY(0); }
-  50% { box-shadow: 0 14px 28px color-mix(in srgb, var(--accent) 45%, transparent); transform: translateY(-2px); }
-}
-.motif-dot {
-  animation: dotBlink 2.2s ease-in-out infinite;
-}
-.motif-dot.delay { animation-delay: 1.1s; }
-@keyframes dotBlink {
-  0%, 100% { opacity: 0.45; }
-  50% { opacity: 1; }
+  -webkit-text-fill-color: transparent;
+  /* The lit lower lip of the impression, and a faint shade where the die pressed in */
+  filter: drop-shadow(0 1px 0 rgba(255, 252, 240, 0.85)) drop-shadow(0 -0.6px 0 rgba(70, 48, 14, 0.35));
 }
 
-/* Countdown */
-.countdown-wrap { margin: 1.5rem 0 0.4rem; }
+/* Date and venue */
+.detail-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.detail-big {
+  margin: 0.1rem 0;
+  font-size: clamp(1.15rem, 1rem + 0.5vw, 1.35rem);
+  font-weight: 600;
+  line-height: 1.3;
+}
+.detail .meta { margin: 0; font-size: 0.98rem; line-height: 1.45; }
+
+/* Countdown: one engraved line of figures */
+.countdown-wrap { margin: clamp(10px, 2vh, 18px) 0 0; }
 .countdown-title {
-  margin: 0 0 0.75rem;
+  margin: 0 0 0.4rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  font-size: 0.78rem;
-  color: var(--accent);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--gold-ink);
 }
-.countdown {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 10px;
-}
+.countdown { display: flex; justify-content: center; }
 .countdown-unit {
-  background: rgba(255,255,255,0.72);
-  border-radius: 16px;
-  padding: 0.85rem 0.25rem;
-  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
-  box-shadow: 0 8px 18px rgba(80, 60, 30, 0.06);
+  flex: 0 1 84px;
+  padding: 0.1rem 0.4rem;
 }
+.countdown-unit + .countdown-unit { border-inline-start: 1px solid rgba(150, 112, 44, 0.45); }
 .countdown-unit strong {
   display: block;
-  font-size: clamp(1.45rem, 4vw, 1.9rem);
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
   animation: tickIn 0.35s ease;
 }
 .countdown-unit small {
-  color: var(--muted);
+  color: var(--letter-soft);
   font-size: 0.72rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
-.countdown-message {
-  font-size: 1.2rem;
-  color: var(--ink);
-}
+.countdown-message { font-size: 1.2rem; }
 @keyframes tickIn {
   from { transform: translateY(6px); opacity: 0.35; }
-  to { transform: translateY(0); opacity: 1; }
+  to { transform: none; opacity: 1; }
 }
 
-/* Reveal animation */
+/* Actions */
+.letter .btn-row { margin-top: clamp(10px, 2vh, 18px); gap: 8px; }
+.letter .btn {
+  min-height: 40px;
+  padding: 0.45rem 1rem;
+  font-size: 0.95rem;
+  background: rgba(255, 250, 238, 0.55);
+  border: 1px solid rgba(150, 112, 44, 0.55);
+  color: var(--letter-ink);
+}
+.letter .btn:hover { background: rgba(255, 250, 238, 0.9); box-shadow: 0 6px 14px rgba(60, 40, 10, 0.15); }
+.letter .btn-primary {
+  background: var(--wax);
+  border-color: var(--wax);
+  color: #fbf1e4;
+  font-weight: 600;
+}
+.letter .btn-primary:hover { background: #a3161f; }
+
+/* Sign-off: handwriting and the red seal, like the close of a letter */
+.letter-sign {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  padding-inline: clamp(4px, 2vw, 24px);
+}
+.signature { text-align: start; }
+.sign-off {
+  margin: 0;
+  font-style: italic;
+  font-size: 1.05rem;
+  color: #4a3f33;
+  text-shadow: 0 1px 0 rgba(255, 250, 238, 0.6);
+}
+[dir='rtl'] .sign-off { font-style: normal; }
+.sign-names {
+  margin: -0.1rem 0 0;
+  font-family: 'Great Vibes', cursive;
+  font-size: clamp(1.9rem, 1.4rem + 1.4vw, 2.5rem);
+  line-height: 1.1;
+  transform: rotate(-3deg);
+  transform-origin: left center;
+}
+[dir='rtl'] .sign-names {
+  font-family: 'Aref Ruqaa', serif;
+  font-weight: 700;
+  font-size: clamp(1.7rem, 1.3rem + 1.2vw, 2.2rem);
+  transform: rotate(3deg);
+  transform-origin: right center;
+}
+/* Ink pressed into the paper, with a rough edge (filter in InvitationCard.vue) */
+.ink-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+.sign-names .ink {
+  display: inline-block;
+  color: #1f2340;
+  opacity: 0.9;
+  filter: url(#ink-rough);
+  text-shadow: 0 1px 0 rgba(255, 250, 238, 0.6), 0 -0.5px 0 rgba(10, 10, 30, 0.25);
+}
+.letter-seal {
+  width: clamp(66px, 9vw, 92px);
+  height: auto;
+  margin-bottom: -6px;
+  transform: rotate(-12deg);
+  filter: drop-shadow(0 3px 2px rgba(60, 8, 8, 0.45)) drop-shadow(0 8px 10px rgba(40, 20, 5, 0.25));
+}
+
+/* ===================================================================
+   Letter entrance
+   =================================================================== */
+/* Without the 3D letter: parts rise in one after another. */
 .reveal .anim {
   opacity: 0;
   transform: translateY(22px) scale(0.98);
@@ -852,100 +591,229 @@ body {
 .reveal .d7 { animation-delay: 0.84s; }
 .reveal .d8 { animation-delay: 0.96s; }
 .reveal .d9 { animation-delay: 1.08s; }
-.reveal .d10 { animation-delay: 1.2s; }
 @keyframes riseIn {
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  to { opacity: 1; transform: none; }
 }
 
-.countdown-unit {
-  transition: transform 0.35s ease, box-shadow 0.35s ease;
+/* Taking over from the 3D letter: same place, a plain cross-fade. */
+.invite-card.handoff { animation: letterIn 0.7s ease both; }
+.invite-card.handoff .anim { animation: none; opacity: 1; transform: none; }
+@keyframes letterIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* Signed and sealed as the couple finish leaning together. */
+.sign-off {
+  opacity: 0;
+  animation: fadeUp 0.6s ease forwards 3.4s;
 }
-.countdown-unit:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 22px rgba(80, 60, 30, 0.12);
+.sign-names .ink {
+  clip-path: inset(0 100% 0 0);
+  animation: write 1.8s cubic-bezier(0.45, 0.05, 0.4, 1) forwards 3.6s;
+}
+[dir='rtl'] .sign-names .ink {
+  clip-path: inset(0 0 0 100%);
+  animation-name: write-rtl;
+}
+@keyframes write { to { clip-path: inset(0 0 0 0); } }
+@keyframes write-rtl { to { clip-path: inset(0 0 0 0); } }
+.letter-seal {
+  opacity: 0;
+  animation: stamp 0.55s cubic-bezier(0.3, 1.4, 0.5, 1) forwards 5.4s;
+}
+@keyframes stamp {
+  0% { opacity: 0; transform: translateY(-14px) scale(1.7) rotate(-34deg); }
+  60% { opacity: 1; transform: scale(0.9) rotate(-10deg); }
+  100% { opacity: 1; transform: scale(1) rotate(-12deg); }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .reveal .anim,
-  .shine,
-  .soft-bloom,
-  .card-sparkles span,
-  .confetti i,
-  .orbit-ring span,
-  .dust span,
-  .glow,
-  .float-petals span,
-  .countdown-unit strong,
-  .name-rise,
-  .amp-pulse,
-  .name-halo,
-  .motif-path,
-  .motif-leaf,
-  .motif-dot,
-  .ornament i,
-  .ornament span,
-  .greeting,
-  .date-chip,
-  .pulse-btn,
-  .invite-card,
-  .corner,
-  .mono-badge,
-  .open-confetti i,
-  .figure-groom,
-  .figure-bride,
-  .envelope-stage:not(.is-open) .envelope {
-    animation: none !important;
-    opacity: 1;
-    transform: none;
-    filter: none;
+/* ===================================================================
+   The couple walk in, lean towards each other, and hearts rise
+   =================================================================== */
+.couple-figures {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+/* Groom on the left in both languages. */
+[dir='rtl'] .couple-figures { flex-direction: row-reverse; }
+.figure {
+  width: var(--figure-w);
+  height: auto;
+  overflow: visible;
+  filter: drop-shadow(0 10px 14px rgba(60, 45, 25, 0.16));
+}
+.figure .leg,
+.figure .dress,
+.figure .veil,
+.figure .eyes { transform-box: fill-box; }
+.figure .leg,
+.figure .dress,
+.figure .veil { transform-origin: 50% 0; }
+.figure .eyes { transform-origin: 50% 50%; }
+.figure .walker { transform-box: view-box; transform-origin: 60px 210px; }
+
+.figure-groom { animation: walkInGroom 2.4s cubic-bezier(0.33, 0.7, 0.45, 1) 0.7s both; }
+.figure-bride { animation: walkInBride 2.4s cubic-bezier(0.33, 0.7, 0.45, 1) 0.9s both; }
+.figure-groom .walker { animation: walkBob 0.4s ease-in-out 0.7s 6, leanRight 0.9s ease-out 3.2s forwards; }
+.figure-bride .walker { animation: walkBob 0.4s ease-in-out 0.9s 6, leanLeft 0.9s ease-out 3.4s forwards; }
+.figure-groom .leg-front { animation: step 0.8s ease-in-out 0.7s 3; }
+.figure-groom .leg-back { animation: step 0.8s ease-in-out 0.7s 3 reverse; }
+.figure-bride .dress { animation: dressSway 0.8s ease-in-out 0.9s 3; }
+.figure-bride .veil { animation: veilFloat 4.5s ease-in-out infinite; }
+.figure .eyes { animation: blink 4.6s ease-in-out infinite 3.6s; }
+.figure-bride .eyes { animation-delay: 4.4s; }
+
+@keyframes walkInGroom {
+  from { transform: translateX(-150%); opacity: 0; }
+  12% { opacity: 1; }
+  to { transform: none; opacity: 1; }
+}
+@keyframes walkInBride {
+  from { transform: translateX(150%); opacity: 0; }
+  12% { opacity: 1; }
+  to { transform: none; opacity: 1; }
+}
+@keyframes walkBob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+@keyframes step {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(16deg); }
+  75% { transform: rotate(-16deg); }
+}
+@keyframes dressSway {
+  0%, 100% { transform: skewX(0deg); }
+  25% { transform: skewX(3deg); }
+  75% { transform: skewX(-3deg); }
+}
+@keyframes veilFloat {
+  0%, 100% { transform: skewX(0deg) scaleX(1); }
+  50% { transform: skewX(-2deg) scaleX(1.03); }
+}
+@keyframes leanRight { to { transform: rotate(4deg); } }
+@keyframes leanLeft { to { transform: rotate(-4deg); } }
+@keyframes blink {
+  0%, 92%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.12); }
+}
+
+.hearts {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.hearts span {
+  position: absolute;
+  bottom: 52%;
+  width: 12px;
+  opacity: 0;
+  animation: heartRise 3.6s ease-out infinite;
+  animation-delay: calc(3.4s + var(--h) * 0.6s);
+}
+.hearts span:nth-child(3n + 2) { width: 16px; }
+.hearts span:nth-child(3n) { width: 10px; }
+.hearts span:nth-child(odd) { left: calc(var(--figure-w) * 0.75); }
+.hearts span:nth-child(even) { right: calc(var(--figure-w) * 0.75); --drift: -8px; }
+.hearts svg { display: block; width: 100%; fill: #d4a0a6; }
+.hearts span:nth-child(3n) svg { fill: #c9a552; }
+@keyframes heartRise {
+  0% { opacity: 0; transform: translateY(0) scale(0.4); }
+  15% { opacity: 0.95; transform: translateY(-10px) scale(1); }
+  100% { opacity: 0; transform: translateY(-70px) translateX(var(--drift, 8px)) scale(0.9) rotate(12deg); }
+}
+
+/* ===================================================================
+   Layout by screen size
+   =================================================================== */
+@media (min-width: 861px) {
+  .invite-card.letter { padding: clamp(30px, 5.5vh, 60px) clamp(28px, 4.5vw, 64px) clamp(24px, 4vh, 44px); }
+  .letter-body { gap: clamp(10px, 2.4vh, 26px); }
+  .letter-verse blockquote { font-size: clamp(1.2rem, 0.6rem + 1.6vh, 1.7rem); }
+  .letter-verse figcaption { font-size: 1rem; }
+  .heading { font-size: 0.9rem; }
+  .names { --figure-w: clamp(70px, 13vh, 112px); }
+  .names h1 { font-size: clamp(2.1rem, 0.9rem + 2.8vh, 2.9rem); }
+  .greeting { font-size: clamp(1.45rem, 0.8rem + 1.8vh, 2rem); }
+  .message { font-size: 1.15rem; }
+  .detail-big { font-size: clamp(1.3rem, 0.8rem + 1.2vh, 1.65rem); }
+  .detail .meta { font-size: 1.05rem; }
+  .countdown-unit { flex-basis: 96px; }
+  .countdown-unit strong { font-size: clamp(1.9rem, 1rem + 2.2vh, 2.6rem); }
+  .sign-names { font-size: clamp(2.3rem, 1.2rem + 2.4vh, 3.1rem); }
+  [dir='rtl'] .sign-names { font-size: clamp(2rem, 1rem + 2.2vh, 2.7rem); }
+  .letter-seal { width: clamp(84px, 13vh, 116px); }
+}
+
+@media (max-width: 860px) {
+  .letter-grid { grid-template-columns: 1fr; gap: 10px; }
+  .letter-rule {
+    height: 1px;
+    width: 60%;
+    justify-self: center;
+    background: linear-gradient(90deg, transparent, rgba(150, 112, 44, 0.55), transparent);
   }
 }
 
-@media (max-width: 430px) {
-  .countdown { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+/* Phones: keep the floating language button clear of the letter. */
+@media (max-width: 760px) {
+  .page { padding-top: calc(68px + var(--safe-top)); }
+  .envelope-stage {
+    min-height: calc(100dvh - 96px - var(--safe-top) - var(--safe-bottom));
+    padding-top: 0;
+  }
+  .verse-translation { font-size: 0.95rem; margin-top: 0.4rem; }
 }
 
-/* Design themes */
-.design-1 {
-  --accent: var(--sage);
-  --card-base: #cfc7b6;
-  background:
-    radial-gradient(circle at 12% 16%, rgba(127,146,115,0.28), transparent 32%),
-    radial-gradient(circle at 88% 84%, rgba(160,130,70,0.18), transparent 34%),
-    linear-gradient(165deg, #d8d0bf 0%, #c8bfac 55%, #bfb59f 100%);
-}
-.design-2 {
-  --accent: #8a8578;
-  --card-base: #e8e4dc;
-  background: #e8e4dc;
-  border-radius: 8px;
-}
-.design-3 {
-  --accent: var(--gold);
-  --card-base: #ddd4bf;
-  border: 5px solid var(--emerald);
-  box-shadow: inset 0 0 0 1px var(--gold), 0 30px 60px rgba(0,0,0,0.28);
-  background: #ddd4bf;
-}
-.design-4 {
-  --accent: var(--blush);
-  --card-base: #e2d4cf;
-  background:
-    radial-gradient(circle at 18% 18%, rgba(212,160,166,0.35), transparent 34%),
-    radial-gradient(circle at 82% 78%, rgba(127,146,115,0.18), transparent 36%),
-    #e2d4cf;
-  border-radius: 32px;
-}
-.design-5 {
-  --accent: var(--brown);
-  --card-base: #d6c8b0;
-  background:
-    radial-gradient(ellipse 75% 45% at 50% 0%, rgba(255,255,255,0.28), transparent 70%),
-    #d6c8b0;
-  border-radius: 140px 140px 28px 28px;
+@media (max-width: 480px) {
+  .invite-card.letter { padding: 24px 16px 18px; }
+  .letter-frame { inset: 8px; }
+  .filigree { width: 40px; height: 40px; }
+  .letter-verse blockquote { font-size: 0.98rem; line-height: 1.85; }
+  .names { --figure-w: 56px; }
+  .names h1 { font-size: 1.75rem; }
+  .greeting { font-size: 1.25rem; }
+  .message { font-size: 0.98rem; }
+  .detail-big { font-size: 1.05rem; }
+  .detail .meta { font-size: 0.9rem; }
+  .countdown-unit { padding: 0 0.2rem; }
+  .letter .btn { min-height: 36px; padding: 0.35rem 0.75rem; font-size: 0.88rem; }
+  .letter-seal { width: 60px; }
 }
 
-.theme-1 .glow.g2 { background: rgba(127,146,115,0.3); }
-.theme-3 .glow.g1 { background: rgba(26,70,52,0.35); }
-.theme-4 .glow.g2 { background: rgba(212,160,166,0.35); }
-.theme-5 .glow.g1 { background: rgba(107,82,60,0.35); }
+/* ===================================================================
+   Reduced motion: everything in place, nothing travels
+   =================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .glow,
+  .reveal .anim,
+  .invite-card.handoff,
+  .countdown-unit strong,
+  .gate-verse .w,
+  .gate-verse .verse-mark,
+  .gate-verse figcaption,
+  .verse-translation,
+  .tap-hand,
+  .tap-ripple,
+  .figure-groom,
+  .figure-bride,
+  .figure .walker,
+  .figure .leg,
+  .figure .dress,
+  .figure .veil,
+  .figure .eyes,
+  .sign-off,
+  .letter-seal {
+    animation: none !important;
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+  .tap-hint { animation: none; opacity: 0.5; }
+  .letter-seal { transform: rotate(-12deg); }
+  .sign-names .ink { clip-path: none; animation: none; }
+  .hearts { display: none; }
+}

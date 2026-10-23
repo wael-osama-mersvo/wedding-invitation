@@ -22,7 +22,7 @@ beforeEach(() => {
 })
 
 async function openEnvelope(wrapper) {
-  await wrapper.find('.env-cta').trigger('click')
+  await wrapper.find('.envelope-hit').trigger('click')
   // EnvelopeGate emits after setTimeout (0ms when reduced-motion is on)
   await new Promise((resolve) => setTimeout(resolve, 30))
   await flushPromises()
@@ -33,7 +33,8 @@ describe('App invitation flow', () => {
     window.history.pushState({}, '', '/wedding-invitation/')
     const wrapper = mount(App)
     await flushPromises()
-    expect(wrapper.text()).toMatch(/افتح|دعوة|Open|invitation/i)
+    // The envelope itself is the labelled button; the gate shows no button text.
+    expect(wrapper.find('.envelope-hit').attributes('aria-label')).toMatch(/افتح|دعوة|Open|invitation/i)
     await openEnvelope(wrapper)
     expect(wrapper.findComponent(InvitationCard).exists()).toBe(true)
   })
