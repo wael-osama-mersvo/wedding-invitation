@@ -159,15 +159,21 @@ body {
   line-height: 2.15;
   text-shadow: 0 2px 18px rgba(0, 0, 0, 0.45);
 }
+/* Words rise in with opacity and transform only, which the compositor runs even while
+   the 3D scene is busy starting up. The blur is added only where a desktop GPU can afford it. */
 .gate-verse .w {
   display: inline-block;
   opacity: 0;
-  filter: blur(6px);
-  transform: translateY(10px);
+  transform: translate3d(0, 10px, 0);
+  will-change: transform, opacity;
   animation: wordIn 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   animation-delay: calc(0.4s + var(--i) * 0.14s);
 }
 @keyframes wordIn {
+  to { opacity: 1; transform: none; }
+}
+@keyframes wordInBlur {
+  from { filter: blur(6px); }
   to { opacity: 1; filter: blur(0); transform: none; }
 }
 .verse-mark {
@@ -179,8 +185,12 @@ body {
 .gate-verse .verse-mark {
   display: inline-block;
   opacity: 0;
-  filter: blur(6px);
+  will-change: opacity;
   animation: wordIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards 0.1s;
+}
+@media (hover: hover) and (pointer: fine) {
+  .gate-verse .w,
+  .gate-verse .verse-mark { animation-name: wordInBlur; }
 }
 .gate-verse figcaption {
   margin-top: 0.35rem;
