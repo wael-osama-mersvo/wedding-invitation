@@ -1,6 +1,7 @@
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
 import { formatCoupleNames, formatGreeting, guestDisplayName, weddingConfig } from './config/wedding.js'
+import { getDesignTheme } from './config/designThemes.js'
 import { weddingStartEnd } from './utils/calendar.js'
 import { decryptGuestToken, readGuestParam } from './crypto/guestPayload.js'
 import EnvelopeGate from './components/EnvelopeGate.vue'
@@ -14,18 +15,21 @@ const revealed = ref(false)
 const stage = ref(null)
 // 'loading' until the WebGL stage has drawn its envelope, then 'ready' or 'unavailable'.
 const stageState = ref('loading')
-const sceneColors = {
-  gold: '#e0c07a',
-  light: '#fff6e8',
-  blush: '#d4a0a6',
-  petal: '#f3e3d3',
-  leaf: '#8fa382',
-}
 const preferReducedMotion = ref(
   typeof window !== 'undefined'
     && typeof window.matchMedia === 'function'
     && window.matchMedia('(prefers-reduced-motion: reduce)').matches,
 )
+
+const theme = computed(() => getDesignTheme(designNumber.value))
+const sceneColors = computed(() => theme.value.scene)
+const pageStyle = computed(() => ({
+  background: theme.value.page.bg,
+  '--glow-1': theme.value.page.g1,
+  '--glow-2': theme.value.page.g2,
+  '--glow-3': theme.value.page.g3,
+}))
+const pageClass = computed(() => `page design-page-${designNumber.value}`)
 
 const wording = computed(() => weddingConfig.wording[language.value] || weddingConfig.wording.en)
 const dir = computed(() => (language.value === 'ar' ? 'rtl' : 'ltr'))
@@ -38,11 +42,9 @@ const envelopeText = computed(() => {
   return {
     rtl: ar,
     initials: 'W&A',
-    // The envelope's front
     guest: guestDisplayName(guest.value, language.value),
     to: ar ? 'إلى' : 'To',
     cta: wording.value.openLetter,
-    // The folded letter's inside, a likeness of the page's card
     verse: weddingConfig.verse.text,
     groom: couple.groom,
     bride: couple.bride,
@@ -83,6 +85,10 @@ watch(language, (lang) => {
   document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr'
 })
 
+watch(designNumber, () => {
+  stageState.value = 'loading'
+})
+
 function letterDate(lang) {
   const { start } = weddingStartEnd()
   const opts = { timeZone: weddingConfig.timezone, day: 'numeric', month: 'long', year: 'numeric' }
@@ -95,7 +101,6 @@ function toggleLanguage() {
 
 function onOpening() {
   if (stageState.value !== 'ready') return
-  // The scene reports when its letter has reached the page's letter.
   const ms = stage.value?.openEnvelope() ?? 0
   window.setTimeout(onOpened, ms)
 }
@@ -106,7 +111,7 @@ function onOpened() {
 </script>
 
 <template>
-  <div class="page" :dir="dir">
+  <div :class="pageClass" :style="pageStyle" :dir="dir">
     <div class="ambiance" aria-hidden="true">
       <span class="glow g1" />
       <span class="glow g2" />
@@ -114,6 +119,7 @@ function onOpened() {
     </div>
     <StageCanvas
       ref="stage"
+      :key="`design-${designNumber}`"
       :colors="sceneColors"
       :envelope-text="envelopeText"
       :prefer-reduced-motion="preferReducedMotion"

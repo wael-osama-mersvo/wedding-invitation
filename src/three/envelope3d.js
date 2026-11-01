@@ -258,7 +258,7 @@ function drawAddress(ctx, w, h, text) {
   }
 }
 
-export function createEnvelope({ text, small = false, photo = null, shape }) {
+export function createEnvelope({ text, small = false, photo = null, shape, paper = null }) {
   const size = small ? 1024 : 1536
   const root = new THREE.Group()
   const body = new THREE.Group()
@@ -274,14 +274,19 @@ export function createEnvelope({ text, small = false, photo = null, shape }) {
     flap: [[-hw, hh], [hw, hh], [0, flapTipY]],
   }
 
-  // Warm cream stock. Canvas y runs down, so a fold at the top of the envelope is y = 0.
-  const flapPaper = paperMaterial('#f0dfba', [0.5, 0.75, 0.5, 0.0], size, edgeOverlay(shapes.flap), photo)
+  const flapHex = paper?.flap || '#f0dfba'
+  const sideHex = paper?.side || '#e9d5ab'
+  const bottomHex = paper?.bottom || '#e2cb9c'
+  const deepHex = paper?.deep || '#d3b885'
+
+  // Paper stock tinted per invitation design. Canvas y runs down.
+  const flapPaper = paperMaterial(flapHex, [0.5, 0.75, 0.5, 0.0], size, edgeOverlay(shapes.flap), photo)
   // The bottom piece lies over both sides: its contact shadow is printed on them.
   const bottomHalo = haloOverlay(haloCanvas(shapes.bottom))
-  const leftPaper = paperMaterial('#e9d5ab', [0.5, 0.5, 0.0, 0.5], size, bothOverlays(edgeOverlay(shapes.left), bottomHalo), photo)
-  const rightPaper = paperMaterial('#e9d5ab', [0.5, 0.5, 1.0, 0.5], size, bothOverlays(edgeOverlay(shapes.right), bottomHalo), photo)
-  const bottomPaper = paperMaterial('#e2cb9c', [0.5, 0.42, 0.5, 1.0], size, edgeOverlay(shapes.bottom), photo)
-  const outsideDeep = paperMaterial('#d3b885', null, size, null, photo)
+  const leftPaper = paperMaterial(sideHex, [0.5, 0.5, 0.0, 0.5], size, bothOverlays(edgeOverlay(shapes.left), bottomHalo), photo)
+  const rightPaper = paperMaterial(sideHex, [0.5, 0.5, 1.0, 0.5], size, bothOverlays(edgeOverlay(shapes.right), bottomHalo), photo)
+  const bottomPaper = paperMaterial(bottomHex, [0.5, 0.42, 0.5, 1.0], size, edgeOverlay(shapes.bottom), photo)
+  const outsideDeep = paperMaterial(deepHex, null, size, null, photo)
   const liner = linerMaterial()
 
   const back = new THREE.Mesh(new THREE.PlaneGeometry(ENV_W, ENV_H), liner)

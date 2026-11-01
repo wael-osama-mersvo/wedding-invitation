@@ -337,7 +337,13 @@ export async function createWeddingScene(canvas, { colors, text, anchor, reduced
   // Envelope
   const [photo] = await Promise.all([loadPhotoPaper(import.meta.env.BASE_URL), loadFonts()])
   const shape = letterShape()
-  const envelope = createEnvelope({ text: { ...text }, small, photo, shape })
+  const paper = {
+    flap: colors.paperFlap,
+    side: colors.paperSide,
+    bottom: colors.paperBottom,
+    deep: colors.paperDeep,
+  }
+  const envelope = createEnvelope({ text: { ...text }, small, photo, shape, paper })
   const fly = { k: 0, from: null, to: null }
   scene.add(envelope.root)
   const tweens = []

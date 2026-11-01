@@ -41,6 +41,9 @@ body {
    Page: warm dark ground, soft drifting glows, the WebGL stage on top
    =================================================================== */
 .page {
+  --glow-1: rgba(195, 163, 90, 0.35);
+  --glow-2: rgba(212, 160, 166, 0.28);
+  --glow-3: rgba(127, 146, 115, 0.25);
   position: relative;
   min-height: 100dvh;
   padding: calc(16px + var(--safe-top)) 16px calc(28px + var(--safe-bottom));
@@ -51,6 +54,7 @@ body {
     radial-gradient(ellipse at 15% 10%, rgba(195, 163, 90, 0.22), transparent 42%),
     radial-gradient(ellipse at 85% 90%, rgba(127, 146, 115, 0.2), transparent 40%),
     linear-gradient(165deg, #2a221c 0%, #1a1612 45%, #241d17 100%);
+  transition: background 0.6s ease;
 }
 
 .ambiance { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
@@ -63,9 +67,9 @@ body {
   opacity: 0.35;
   animation: drift 16s ease-in-out infinite alternate;
 }
-.g1 { background: rgba(195, 163, 90, 0.35); top: -10%; left: -8%; }
-.g2 { background: rgba(212, 160, 166, 0.28); bottom: -15%; right: -10%; animation-delay: -4s; }
-.g3 { background: rgba(127, 146, 115, 0.25); top: 40%; left: 50%; animation-delay: -8s; }
+.g1 { background: var(--glow-1); top: -10%; left: -8%; }
+.g2 { background: var(--glow-2); bottom: -15%; right: -10%; animation-delay: -4s; }
+.g3 { background: var(--glow-3); top: 40%; left: 50%; animation-delay: -8s; }
 
 @keyframes drift {
   from { transform: translate3d(0, 0, 0) scale(1); }
