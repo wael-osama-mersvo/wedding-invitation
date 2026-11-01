@@ -55,6 +55,16 @@ const envelopeText = computed(() => {
 })
 
 onMounted(async () => {
+  const params = new URLSearchParams(window.location.search)
+  const designParam = Number(params.get('design'))
+  const langParam = params.get('lang')
+  if (langParam === 'ar' || langParam === 'en') {
+    language.value = langParam
+  }
+  if (Number.isInteger(designParam) && designParam >= 1 && designParam <= 10) {
+    designNumber.value = designParam
+  }
+
   const token = readGuestParam()
   if (token) {
     const payload = await decryptGuestToken(token)

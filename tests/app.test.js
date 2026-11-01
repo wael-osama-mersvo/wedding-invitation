@@ -114,8 +114,8 @@ describe('calendar and countdown', () => {
 })
 
 describe('designs', () => {
-  it('renders all five design classes', () => {
-    for (let n = 1; n <= 5; n += 1) {
+  it('renders all ten design classes', () => {
+    for (let n = 1; n <= 10; n += 1) {
       const wrapper = mount(InvitationCard, {
         props: {
           language: 'en',

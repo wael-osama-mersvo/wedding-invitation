@@ -797,6 +797,126 @@ body {
 /* ===================================================================
    Reduced motion: everything in place, nothing travels
    =================================================================== */
+/* Per-design invitation themes (1–5 light tokens; 6–10 full worlds) */
+.invite-card.design-1 {
+  --letter-ink: #2f2a24;
+  --letter-soft: #5e4f3c;
+  --gold-ink: #7f9273;
+  background-color: #cfc7b6;
+}
+.invite-card.design-2 {
+  --letter-ink: #282826;
+  --gold-ink: #5a5a55;
+  background-color: #fcfaf6;
+}
+.invite-card.design-3 {
+  --letter-ink: #143728;
+  --gold-ink: #b59446;
+  background-color: #f6efe0;
+}
+.invite-card.design-4 {
+  --letter-ink: #5a373c;
+  --gold-ink: #b4787d;
+  background-color: #fdf5f1;
+}
+.invite-card.design-5 {
+  --letter-ink: #463728;
+  --gold-ink: #6e553c;
+  background-color: #f0e5d4;
+}
+
+/* 6 Moonlit Nile */
+.invite-card.design-6 {
+  --letter-ink: #e6dcc8;
+  --letter-soft: #b8a888;
+  --gold-ink: #d4ba78;
+  --wax: #3a4a8a;
+  color: var(--letter-ink);
+  background-color: #1c2440;
+  background-image:
+    radial-gradient(120% 90% at 50% 20%, rgba(80, 100, 160, 0.45), transparent 55%),
+    radial-gradient(100% 80% at 50% 100%, rgba(20, 16, 40, 0.8), transparent 50%),
+    linear-gradient(180deg, #243056, #141828);
+  background-blend-mode: normal;
+}
+.invite-card.design-6 .letter-frame,
+.invite-card.design-6 .letter-frame::after { border-color: rgba(212, 186, 120, 0.55); }
+.invite-card.design-6 .filigree { stroke: #d4ba78; }
+.invite-card.design-6 .filigree ellipse,
+.invite-card.design-6 .filigree circle { fill: #d4ba78; }
+.invite-card.design-6 .names .groom,
+.invite-card.design-6 .names .bride { letter-spacing: -0.02em; }
+.invite-card.design-6 .letter-verse { color: #c8b898; }
+
+/* 7 Rose Damask */
+.invite-card.design-7 {
+  --letter-ink: #5a3238;
+  --letter-soft: #8a6068;
+  --gold-ink: #a8824e;
+  --wax: #a05058;
+  background-color: #fceee8;
+  background-image:
+    radial-gradient(90% 70% at 50% 0%, rgba(230, 180, 186, 0.45), transparent 60%),
+    url('/textures/paper/color.jpg');
+  background-blend-mode: multiply, multiply;
+}
+.invite-card.design-7 .letter-frame { border-color: rgba(186, 120, 128, 0.65); }
+.invite-card.design-7 .filigree { stroke: #a8824e; }
+
+/* 8 Olive Courtyard */
+.invite-card.design-8 {
+  --letter-ink: #373228;
+  --letter-soft: #6a6450;
+  --gold-ink: #6e7850;
+  --wax: #8a6040;
+  background-color: #ece2d0;
+  background-image:
+    linear-gradient(180deg, rgba(180, 170, 130, 0.25), transparent 40%),
+    url('/textures/paper/color.jpg');
+  background-blend-mode: multiply, multiply;
+}
+.invite-card.design-8 .letter-frame { border-color: rgba(110, 120, 78, 0.7); }
+.invite-card.design-8 .filigree { stroke: #6e7850; }
+
+/* 9 Midnight Velvet */
+.invite-card.design-9 {
+  --letter-ink: #e6d2b4;
+  --letter-soft: #b89a78;
+  --gold-ink: #dcc8a0;
+  --wax: #784068;
+  color: var(--letter-ink);
+  background-color: #141018;
+  background-image:
+    radial-gradient(100% 80% at 50% 30%, rgba(90, 40, 80, 0.55), transparent 60%),
+    linear-gradient(180deg, #1c141c, #0c0a10);
+  background-blend-mode: normal;
+}
+.invite-card.design-9 .letter-frame,
+.invite-card.design-9 .letter-frame::after { border-color: rgba(220, 200, 160, 0.5); }
+.invite-card.design-9 .filigree { stroke: #dcc8a0; }
+.invite-card.design-9 .filigree ellipse,
+.invite-card.design-9 .filigree circle { fill: #dcc8a0; }
+.invite-card.design-9 .names .groom,
+.invite-card.design-9 .names .bride { letter-spacing: -0.03em; }
+.invite-card.design-9 .letter-verse { color: #c8a8b8; }
+
+/* 10 Desert Pearl */
+.invite-card.design-10 {
+  --letter-ink: #463228;
+  --letter-soft: #7a6050;
+  --gold-ink: #b46e46;
+  --wax: #a06840;
+  background-color: #f2e4d0;
+  background-image:
+    radial-gradient(80% 60% at 50% 10%, rgba(252, 248, 242, 0.9), transparent 55%),
+    linear-gradient(180deg, #faf2e6, #e8d2b4);
+  background-blend-mode: normal;
+}
+.invite-card.design-10 .letter-frame { border-color: rgba(180, 110, 70, 0.65); }
+.invite-card.design-10 .filigree { stroke: #b46e46; }
+.invite-card.design-10 .filigree ellipse,
+.invite-card.design-10 .filigree circle { fill: #b46e46; }
+
 @media (prefers-reduced-motion: reduce) {
   .glow,
   .reveal .anim,

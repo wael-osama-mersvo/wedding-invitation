@@ -54,7 +54,7 @@ export function validateGuestPayload(payload) {
   const preferredLanguage = payload.preferredLanguage
   if (preferredLanguage !== 'ar' && preferredLanguage !== 'en') return null
   const designNumber = Number(payload.designNumber)
-  if (!Number.isInteger(designNumber) || designNumber < 1 || designNumber > 5) return null
+  if (!Number.isInteger(designNumber) || designNumber < 1 || designNumber > 10) return null
 
   return {
     v: 1,

@@ -61,7 +61,7 @@ describe('guest payload contract', () => {
         nameAr: 'سارة',
         nameEn: 'Sara',
         preferredLanguage: 'en',
-        designNumber: 9,
+        designNumber: 11,
       }),
     ).toBeNull()
   })
